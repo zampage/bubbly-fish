@@ -1,0 +1,27 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "target": "es2015",
+    "module": "CommonJS",
+    "lib": [
+      "es2020",
+      "dom",
+      "ScriptHost"
+    ],
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/phaser/types"
+    ],
+    "types": [
+      "Phaser"
+    ],
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}
