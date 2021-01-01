@@ -1,14 +1,21 @@
 export class Scale {
+  private static instance: Scale;
+
   public worldHeight: number;
   public worldWidth: number;
   public centerX: number;
   public centerY: number;
 
-  constructor(scene: Phaser.Scene) {
-    this.worldHeight = scene.game.canvas.height;
-    this.worldWidth = scene.game.canvas.width;
+  constructor(width: number, height: number) {
+    this.worldHeight = height;
+    this.worldWidth = width;
     this.centerY = this.worldHeight / 2;
     this.centerX = this.worldWidth / 2;
+  }
+
+  public static getInstance(width?: number, height?: number): Scale {
+    if (!Scale.instance) Scale.instance = new Scale(width, height);
+    return Scale.instance;
   }
 
   public percentageY(assetHeight: number, targetPercentage: number): number {

@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { MainScene } from './scene/main.scene';
+import { BootScene } from './scene/boot.scene';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'Bubbly Fish',
@@ -16,7 +16,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     }
   },
   backgroundColor: '#ffffff',
-  scene: MainScene,
+  scene: BootScene,
 };
 
 const g = new Phaser.Game(gameConfig);
