@@ -8,5 +8,10 @@ export class BootScene extends Phaser.Scene {
 
     // proceed to main scene
     this.scene.add('main', MainScene, true);
+
+    document.querySelector('#gameover button').addEventListener('click', () => {
+      document.querySelector('#gameover').classList.remove('active');
+      this.scene.start('main');
+    })
   }
 }

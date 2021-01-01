@@ -1,5 +1,6 @@
-import * as Phaser from 'phaser';
 import { BootScene } from './scene/boot.scene';
+
+export const GRAVITY = new Phaser.Math.Vector2(0, 750);
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'Bubbly Fish',
@@ -12,7 +13,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: {
       debug: true,
-      gravity: new Phaser.Math.Vector2(0, 300),
+      gravity: GRAVITY,
     }
   },
   backgroundColor: '#ffffff',

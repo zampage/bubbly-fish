@@ -1,14 +1,14 @@
 import { Scale } from '../util/scale';
-import { ScenerySprite } from '../gameobjects/scenery.sprite';
+import { Fish } from '../gameobjects/fish';
 
 const FISH = 'fish';
 const BACKGROUND = 'background';
 
 export class MainScene extends Phaser.Scene {
   private customScale: Scale;
-  private fish: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  private fish: Fish;
   private obstacle: Phaser.Physics.Arcade.StaticGroup;
-  private scenery: ScenerySprite;
+  private location = 0;
 
   public init(): void {
     this.customScale = Scale.getInstance();
@@ -20,42 +20,35 @@ export class MainScene extends Phaser.Scene {
   }
 
   public create(): void {
-    // background
-    this.scenery = new ScenerySprite(this, 0, 0, BACKGROUND);
-    this.add.existing(this.scenery);
+    this.generateLevel();
 
     // fish
-    this.fish = this.physics.add.sprite(this.customScale.centerX, this.customScale.centerY, FISH);
-    this.customScale.scaleSprite(this.fish, 0.2);
-    this.fish.setCollideWorldBounds(true);
+    this.fish = new Fish(this, 0, this.customScale.centerY, FISH);
 
     // obstacle collision
     this.obstacle = this.physics.add.staticGroup();
-    this.physics.add.collider(this.fish, this.obstacle, () => {
-      document.querySelector('#gameover').classList.add('active');
-    });
+    this.physics.add.collider(this.fish, this.obstacle, () => this.fish.onCollision());
 
     // generate obstacles
     const o = this.add.rectangle(this.customScale.centerX, 0, 100, this.customScale.worldHeight * 0.3, 0xFF9900);
     this.obstacle.add(o);
 
-    // bounds
-    this.physics.world.setBounds(0, 0, this.scenery.width * 2, this.customScale.worldHeight);
-    this.cameras.main.setBounds(0, 0, this.physics.world.bounds.width, this.physics.world.bounds.height);
+    // camera
+    this.cameras.main.startFollow(this.fish);
+    this.cameras.main.followOffset = new Phaser.Math.Vector2(this.fish.displayWidth - this.customScale.centerX, 0);
   }
 
   public update(): void {
-    const { space, up, right, left } = this.input.keyboard.createCursorKeys();
+    if (this.fish.x + this.customScale.worldWidth > this.location) this.generateLevel();
+  }
 
-    this.fish.setVelocityX(0);
-    this.cameras.main.centerOnX(this.fish.x)
+  private generateLevel(): void {
+    const background = this.add.sprite(this.location, 0, BACKGROUND);
+    background.setOrigin(0, 0);
+    this.location += background.width;
 
-    if (this.fish.x > this.physics.world.bounds.width * 0.75) {
-      this.fish.x = this.physics.world.bounds.width * 0.25;
-    }
-
-    if (space.isDown || up.isDown) this.fish.setVelocityY(-300);
-    if (right.isDown) this.fish.setVelocityX(300);
-    if (left.isDown) this.fish.setVelocityX(-300);
+    // adjust bounds to new world size
+    this.physics.world.setBounds(0, 0, this.location, this.customScale.worldHeight);
+    this.cameras.main.setBounds(0, 0, this.physics.world.bounds.width, this.physics.world.bounds.height);
   }
 }
