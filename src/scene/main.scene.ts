@@ -13,6 +13,7 @@ export class MainScene extends Phaser.Scene {
 
   public init(): void {
     this.customScale = Scale.getInstance();
+    ScoreManager.update(0);
   }
 
   public preload(): void {
