@@ -34,11 +34,13 @@ export class Fish extends Phaser.Physics.Arcade.Sprite {
     if (this.isDead) {
       this.setVelocityX(0);
 
-      if (Math.abs(this.angle) !== 180) {
+      if (Math.abs(this.angle) < 175) {
         this.angle += 5;
       } else if (this.y - this.displayWidth / 2 === 0) {
         this.scene.scene.pause();
       }
+    } else {
+      this.setRotation(Math.atan2(this.body.velocity.y, this.body.velocity.x));
     }
   }
 
