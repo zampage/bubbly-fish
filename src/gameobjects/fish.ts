@@ -13,7 +13,7 @@ export class Fish extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, texture);
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    Scale.getInstance().scaleSprite(this, 0.2);
+    Scale.getInstance().scaleSprite(this, 0.15);
     this.setCollideWorldBounds(true);
     this.body.onWorldBounds = true;
     this.depth = 1;
