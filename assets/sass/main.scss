@@ -18,6 +18,14 @@ body {
   }
 }
 
+#score {
+  position: fixed;
+  left: 1em;
+  top: 1em;
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
 #gameover {
   position: fixed;
   top: 0;
@@ -39,16 +47,28 @@ body {
     background-color: #fff;
     border-radius: 0.5em;
     padding: 2em 4em;
+    min-width: 250px;
+  }
+
+  h2,
+  .score-wrapper {
+    margin: 1.4rem 0;
   }
 
   h2 {
     font-size: 2em;
   }
 
+  .score-wrapper {
+    display: block;
+    font-size: 1.4em;
+  }
+
   button {
     $color: #009900;
 
     border: 0;
+    outline: 0;
     background: $color;
     padding: 0.6em 0.8em;
     border-radius: 0.5em;
@@ -58,10 +78,15 @@ body {
     font-size: 1.4em;
     cursor: pointer;
     box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.5s ease;
 
     &:hover {
       background: transparent;
       color: $color;
+    }
+
+    &:focus {
+      box-shadow: 0 0 5px 5px rgba($color, 0.5);
     }
   }
 }

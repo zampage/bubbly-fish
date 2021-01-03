@@ -8,10 +8,14 @@
   </head>
   <body>
     <section id="bubbly-fish"></section>
-    <section id="gameover">
+
+    <section id="score">Score: <span data-score-value>0</span></section>
+
+    <section id="gameover" data-ui-gameover>
       <div>
         <h2>Gameover</h2>
-        <button type="button">Restart</button>
+        <span class="score-wrapper">Score: <span data-score-value>0</span></span>
+        <button type="button" autofocus>Restart</button>
       </div>
     </section>
     <script src="node_modules/phaser/dist/phaser.min.js"></script>

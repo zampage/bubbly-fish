@@ -1,5 +1,7 @@
 import { Scale } from '../util/scale';
 import { Fish } from '../gameobjects/fish';
+import { LevelFactory } from '../util/level-factory';
+import { ScoreManager } from '../util/score-manager';
 
 const FISH = 'fish';
 const BACKGROUND = 'background';
@@ -7,8 +9,8 @@ const BACKGROUND = 'background';
 export class MainScene extends Phaser.Scene {
   private customScale: Scale;
   private fish: Fish;
-  private obstacle: Phaser.Physics.Arcade.StaticGroup;
-  private location = 0;
+  private obstacles: Phaser.Physics.Arcade.StaticGroup;
+  private lvlFactory: LevelFactory;
 
   public init(): void {
     this.customScale = Scale.getInstance();
@@ -20,35 +22,28 @@ export class MainScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.generateLevel();
-
     // fish
     this.fish = new Fish(this, 0, this.customScale.centerY, FISH);
 
     // obstacle collision
-    this.obstacle = this.physics.add.staticGroup();
-    this.physics.add.collider(this.fish, this.obstacle, () => this.fish.onCollision());
-
-    // generate obstacles
-    const o = this.add.rectangle(this.customScale.centerX, 0, 100, this.customScale.worldHeight * 0.3, 0xFF9900);
-    this.obstacle.add(o);
+    this.obstacles = this.physics.add.staticGroup();
+    this.physics.add.collider(this.fish, this.obstacles, () => this.fish.onCollision());
 
     // camera
     this.cameras.main.startFollow(this.fish);
     this.cameras.main.followOffset = new Phaser.Math.Vector2(this.fish.displayWidth - this.customScale.centerX, 0);
+
+    // levels
+    this.lvlFactory = new LevelFactory(this, BACKGROUND, this.obstacles);
+    this.lvlFactory.generate();
+
+    this.physics.world.on('worldbounds', ({ gameObject }: { gameObject: Phaser.GameObjects.GameObject }) => {
+      if (gameObject === this.fish) this.fish.onCollision();
+    });
   }
 
   public update(): void {
-    if (this.fish.x + this.customScale.worldWidth > this.location) this.generateLevel();
-  }
-
-  private generateLevel(): void {
-    const background = this.add.sprite(this.location, 0, BACKGROUND);
-    background.setOrigin(0, 0);
-    this.location += background.width;
-
-    // adjust bounds to new world size
-    this.physics.world.setBounds(0, 0, this.location, this.customScale.worldHeight);
-    this.cameras.main.setBounds(0, 0, this.physics.world.bounds.width, this.physics.world.bounds.height);
+    if (this.fish.x + this.customScale.worldWidth > this.lvlFactory.width) this.lvlFactory.generate();
+    ScoreManager.update(Math.floor(this.fish.x));
   }
 }
